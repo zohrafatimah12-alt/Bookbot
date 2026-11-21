@@ -24,8 +24,10 @@ if [ ! -x "$VENV_DIR/bin/python" ]; then
   "$PY" -m venv "$VENV_DIR"
 fi
 PYVER="$("$VENV_DIR/bin/python" -c 'import sys; print("%d.%d" % sys.version_info[:2])')"
-"$VENV_DIR/bin/pip" install --quiet --upgrade pip
-"$VENV_DIR/bin/pip" install --quiet -r requirements.txt
+# --no-cache-dir: the free plan has only 512 MB of disk, so don't keep pip's cache.
+"$VENV_DIR/bin/pip" install --quiet --no-cache-dir --upgrade pip
+"$VENV_DIR/bin/pip" install --quiet --no-cache-dir -r requirements.txt
+rm -rf "$HOME/.cache/pip"
 
 echo "== 3/4 Self-test (Flask + PyMuPDF)"
 "$VENV_DIR/bin/python" - <<'EOF'

@@ -1,13 +1,13 @@
 // Settings shared by the frontend scripts.
 // These mirror the real limits in the Flask backend (app.py).
-// After you deploy the backend on Render, paste its URL here
-// (for example "https://bookbot-api.onrender.com", no trailing slash).
+// The address of the deployed Flask backend (no trailing slash), for example
+// "https://USERNAME.pythonanywhere.com". Used when the site is online.
 const PRODUCTION_API_BASE = "";
 
 const IS_LOCAL = ["localhost", "127.0.0.1"].includes(window.location.hostname);
 
 window.BOOKBOT_CONFIG = {
-  // Local: Flask on port 5000. Online: the Render backend above.
+  // Local: Flask on port 5000. Online: the deployed backend above.
   API_BASE: IS_LOCAL ? "http://127.0.0.1:5000" : PRODUCTION_API_BASE,
   ANALYZE_PATH: "/analyze",
 
