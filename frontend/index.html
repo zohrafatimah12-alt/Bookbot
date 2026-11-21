@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BookBot — Document Investigation Lab</title>
+  <meta name="description" content="BookBot inspects TXT and PDF documents: word and letter counts, alphabet usage and an extractive summary.">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/report.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="masthead">
+    <a class="wordmark" href="./" aria-label="BookBot home">
+      <svg class="wordmark__mark" viewBox="0 0 64 40" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true">
+        <circle cx="18" cy="20" r="12"/>
+        <circle cx="46" cy="20" r="12"/>
+        <path d="M30 18c1.4-1.6 3.1-1.6 4 0" stroke-width="2.5"/>
+        <path d="M12 17h12M12 21h12M12 25h7" stroke-width="1.6"/>
+        <circle class="wordmark__pupil" cx="46" cy="20" r="4" stroke="none"/>
+      </svg>
+      <span class="wordmark__text">BookBot</span>
+    </a>
+    <p class="masthead__label">Document Investigation Lab</p>
+  </header>
+
+  <main id="main">
+    <!-- ============ VIEW 1 : UPLOAD ============ -->
+    <section id="view-upload" class="view" aria-labelledby="upload-title">
+      <div class="page">
+        <div class="intro">
+          <p class="eyebrow">Specimen intake</p>
+          <h1 id="upload-title" class="display">Put any document<br>under the <em>lens.</em></h1>
+          <p class="lede">BookBot reads your TXT or PDF, counts every word and letter, finds the alphabet it never used, and distils the text into a short summary.</p>
+        </div>
+
+        <aside class="marginalia" aria-label="How it works">
+          <ol>
+            <li><span class="fig">01</span><span>Place a <code>.txt</code> or <code>.pdf</code> in the tray.</span></li>
+            <li><span class="fig">02</span><span>Press <strong>Analyze</strong>. The file is read in memory.</span></li>
+            <li><span class="fig">03</span><span>Study the report. Nothing is stored.</span></li>
+          </ol>
+        </aside>
+
+        <form id="upload-form" class="intake" novalidate>
+          <input id="file-input" class="visually-hidden" type="file" name="file" accept=".txt,.pdf,text/plain,application/pdf" aria-describedby="limits file-error">
+
+          <label id="tray" class="tray" for="file-input" tabindex="0" role="button" aria-describedby="limits">
+            <span class="crop crop--tl" aria-hidden="true"></span>
+            <span class="crop crop--tr" aria-hidden="true"></span>
+            <span class="crop crop--bl" aria-hidden="true"></span>
+            <span class="crop crop--br" aria-hidden="true"></span>
+            <span class="scanline" aria-hidden="true"></span>
+
+            <span class="tray__glyph" aria-hidden="true">Aa</span>
+            <span class="tray__title" id="tray-title">Drop a document in the tray</span>
+            <span class="tray__sub">or <span class="link">browse your files</span></span>
+          </label>
+
+          <p id="limits" class="limits">
+            <span>Accepted: <strong>.txt</strong> (UTF-8) &amp; <strong>.pdf</strong></span>
+            <span>Maximum: <strong id="max-size-label">20 MB</strong></span>
+          </p>
+
+          <div id="specimen" class="specimen" hidden>
+            <p class="specimen__tag">Specimen on the bench</p>
+            <dl class="specimen__data">
+              <div><dt>File</dt><dd id="sp-name"></dd></div>
+              <div><dt>Type</dt><dd id="sp-type"></dd></div>
+              <div><dt>Size</dt><dd id="sp-size"></dd></div>
+            </dl>
+          </div>
+
+          <p id="file-error" class="error" role="alert" hidden></p>
+
+          <div class="actions">
+            <button id="analyze-btn" class="stamp" type="submit" disabled>Analyze document</button>
+            <button id="cancel-btn" class="stamp stamp--ghost" type="button" hidden>Cancel</button>
+            <button id="clear-btn" class="textbtn" type="button" hidden>Remove file</button>
+          </div>
+
+          <div id="progress" class="progress" hidden>
+            <div class="progress__track" aria-hidden="true"><div id="progress-bar" class="progress__bar"></div></div>
+            <p id="progress-text" class="progress__text" role="status" aria-live="polite"></p>
+          </div>
+        </form>
+
+        <p class="privacy">Processed in server memory and discarded after the response. BookBot does not save your document or its summary.</p>
+      </div>
+    </section>
+
+    <!-- ============ VIEW 2 : REPORT ============ -->
+    <section id="view-report" class="view" aria-labelledby="report-title" hidden>
+      <div id="report-root"></div>
+    </section>
+  </main>
+
+  <footer class="colophon">
+    <p>BookBot · a Python + Flask document analyser · Set in Fraunces, Newsreader &amp; IBM Plex Mono</p>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/report.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

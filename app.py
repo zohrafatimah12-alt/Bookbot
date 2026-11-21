@@ -12,12 +12,19 @@ from stats import (
     chars_dict_to_sorted_list,
     get_unused_letters
 )
+from summarizer import summarize
 
 app = Flask(__name__)
 CORS(app)
 
 # Maximum upload size: 20 MB
 app.config["MAX_CONTENT_LENGTH"] = 20 * 1024 * 1024
+
+
+@app.errorhandler(413)
+def file_too_large(error):
+    # Only affects uploads over the limit: return JSON instead of HTML.
+    return jsonify({"error": "File is too large. The maximum size is 20 MB."}), 413
 
 
 @app.route("/")
@@ -76,6 +83,8 @@ def analyze_file():
 
     unused_letters = get_unused_letters(char_count)
 
+    summary_result = summarize(text)
+
     return jsonify({
         "filename": filename,
         "file_size_bytes": file_size,
@@ -91,7 +100,15 @@ def analyze_file():
             for char, count in sorted_chars
             if char.isalpha()
         ],
-        "unused_letters": unused_letters
+        "unused_letters": unused_letters,
+
+        # Extractive summary (see summarizer.py). `summary` is None when the
+        # document has no extractable text.
+        "summary": summary_result["text"],
+        "summary_sentences": summary_result["sentences"],
+        "summary_status": summary_result["status"],
+        "total_sentences": summary_result["sentence_count"],
+        "key_terms": summary_result["key_terms"]
     })
 
 
