@@ -10,7 +10,9 @@ bookbot/
 ├── stats.py          counting helpers (words, letters, unused letters)
 ├── summarizer.py     extractive summary (new)
 ├── main.py           original command-line version (unchanged)
-├── requirements.txt  Flask, flask-cors, pymupdf
+├── requirements.txt  Flask, flask-cors, pymupdf, gunicorn
+├── gunicorn.conf.py  production server settings (port, timeout)
+├── render.yaml       Render deployment blueprint (backend)
 ├── books/            sample texts
 └── frontend/
     ├── index.html    both "pages": upload view + report view
@@ -79,6 +81,42 @@ No text → `summary` is `null` and `summary_status` is `"no_text"`.
   `413` handler that returns JSON for files over 20 MB. All existing routes and
   fields are unchanged.
 - New: `summarizer.py`, `requirements.txt`.
+
+## Deploying online
+
+The site runs in two places: the **frontend** on Vercel (static files) and
+the **backend** (Flask) on Render. The browser loads the page from Vercel and
+sends the uploaded file straight to Render.
+
+### 1. Backend on Render
+
+1. Push this repository to GitHub.
+2. In Render: **New + → Blueprint**, connect the `Bookbot` repository.
+   Render reads `render.yaml` and creates the `bookbot-api` web service
+   (free plan, build `pip install -r requirements.txt`, start `gunicorn app:app`).
+3. `FRONTEND_ORIGINS` is already set to `https://bookbot-frontend-eight.vercel.app`.
+   To allow more sites (for example a custom domain), edit it in
+   *Render → bookbot-api → Environment*, separated by commas, no trailing slash:
+   `https://bookbot-frontend-eight.vercel.app,https://www.example.com`
+4. When the deploy finishes, copy the service URL
+   (like `https://bookbot-api-xxxx.onrender.com`) and check that opening it
+   shows "Welcome to BookBot Web!".
+
+### 2. Connect the frontend
+
+1. In `frontend/js/config.js` set `PRODUCTION_API_BASE` to the Render URL
+   (no trailing slash).
+2. Commit and push. The Vercel project (Root Directory `frontend`) redeploys
+   automatically from GitHub. No `vercel.json` is needed: the frontend is plain
+   static files.
+
+### Good to know
+
+- **Free Render services sleep** after about 15 minutes without traffic. The
+  first upload after a pause can take up to a minute while the server wakes up.
+- Uploads are processed in memory and never stored.
+- Only the origins in `FRONTEND_ORIGINS` (plus `http://localhost:8000`) can call
+  the API from a browser.
 
 ## Known limits
 

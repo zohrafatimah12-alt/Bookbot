@@ -15,7 +15,31 @@ from stats import (
 from summarizer import summarize
 
 app = Flask(__name__)
-CORS(app)
+
+
+def get_allowed_origins():
+    """Browser origins allowed to call this API.
+
+    Set FRONTEND_ORIGINS on the host (Render) to a comma-separated list, e.g.
+    FRONTEND_ORIGINS=https://my-site.vercel.app,https://www.my-domain.com
+    Local development origins are always allowed.
+    """
+    local = ["http://localhost:8000", "http://127.0.0.1:8000"]
+    configured = [
+        origin.strip().rstrip("/")
+        for origin in os.environ.get("FRONTEND_ORIGINS", "").split(",")
+        if origin.strip() and origin.strip() != "*"
+    ]
+    return list(dict.fromkeys(configured + local))   # unique, keeps order
+
+
+# Only /analyze needs CORS, only POST, and only from the origins above.
+CORS(
+    app,
+    resources={r"/analyze": {"origins": get_allowed_origins()}},
+    methods=["POST", "OPTIONS"],
+    max_age=600,
+)
 
 # Maximum upload size: 20 MB
 app.config["MAX_CONTENT_LENGTH"] = 20 * 1024 * 1024

@@ -146,6 +146,11 @@
     if (!selectedFile || activeRequest) return;
     clearError();
 
+    if (!cfg.API_BASE) {
+      showError("The backend address is not configured yet. Set PRODUCTION_API_BASE in js/config.js.");
+      return;
+    }
+
     // Multipart form upload: the backend reads request.files["file"].
     const body = new FormData();
     body.append("file", selectedFile);
