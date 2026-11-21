@@ -2,7 +2,7 @@
 // These mirror the real limits in the Flask backend (app.py).
 // The address of the deployed Flask backend (no trailing slash), for example
 // "https://USERNAME.pythonanywhere.com". Used when the site is online.
-const PRODUCTION_API_BASE = "";
+const PRODUCTION_API_BASE = "https://zohrafatimah12.pythonanywhere.com";
 
 const IS_LOCAL = ["localhost", "127.0.0.1"].includes(window.location.hostname);
 
